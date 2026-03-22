@@ -38,6 +38,10 @@ jobs:
         mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools
         mv cmdline-tools ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest
         
+        # 创建符号链接，让 Buildozer 能在旧路径找到 sdkmanager
+        mkdir -p ~/.buildozer/android/platform/android-sdk/tools
+        ln -sf ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin ~/.buildozer/android/platform/android-sdk/tools/bin
+        
         # 设置环境变量
         export ANDROID_SDK_ROOT=~/.buildozer/android/platform/android-sdk
         export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
