@@ -50,15 +50,11 @@ jobs:
     
     - name: Build APK
       run: |
-        # 直接使用 shop_ui_nobutton_v2.py 作为 main.py
-        # 方式1：复制文件
-        /bin/cp shop_ui_nobutton_v2.py main.py
-        # 或者方式2：直接重命名
-        # mv shop_ui_nobutton_v2.py main.py
+        /bin/cp -f shop_ui_nobutton_v2.py main.py
         buildozer android debug
       env:
         ANDROID_SDK_ROOT: ~/.buildozer/android/platform/android-sdk
-        PATH: ${{ env.PATH }}:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
+        PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
     
     - name: Upload APK
       uses: actions/upload-artifact@v4
