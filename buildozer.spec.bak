@@ -1,0 +1,11 @@
+[app]
+title = 智能导购小X
+package.name = shopagent
+package.domain = com.xiaox.shop
+source.dir = .
+source.include_exts = py,png,jpg,kv,atlas,txt,csv
+source.include_patterns = images/*
+version = 1.0.0
+requirements = python3,kivy,requests
+orientation = portrait
+fullscreen = 0
