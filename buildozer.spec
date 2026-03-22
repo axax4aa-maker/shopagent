@@ -9,5 +9,3 @@ version = 1.0.0
 requirements = python3,kivy==2.3.1,pygame==2.6.1,requests
 orientation = portrait
 fullscreen = 0
-osx.python_version = 3
-osx.kivy_version = 1.9.1
