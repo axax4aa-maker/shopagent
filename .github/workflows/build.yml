@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build APK
 
 on:
   push:
@@ -10,55 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v3
-      
+    
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.9'
     
-    - name: Install system dependencies
+    - name: Install Buildozer
       run: |
+        pip install buildozer
         sudo apt update
-        sudo apt install -y openjdk-17-jdk git zip unzip autoconf libtool pkg-config
-    
-    - name: Install Python dependencies
-      run: |
-        pip install --upgrade pip
-        pip install buildozer cython
-    
-    - name: Setup Android SDK manually
-      run: |
-        # 下载命令行工具
-        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-        unzip commandlinetools-linux-9477386_latest.zip
-        
-        # 创建正确的目录结构
-        mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools
-        mv cmdline-tools ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest
-        
-        # 创建符号链接，让 Buildozer 能在旧路径找到 sdkmanager
-        mkdir -p ~/.buildozer/android/platform/android-sdk/tools
-        ln -sf ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin ~/.buildozer/android/platform/android-sdk/tools/bin
-        
-        # 设置环境变量
-        export ANDROID_SDK_ROOT=~/.buildozer/android/platform/android-sdk
-        export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
-        
-        # 接受所有许可证（自动）
-        yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
-        
-        # 安装稳定版 build-tools
-        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+        sudo apt install -y openjdk-17-jdk
     
     - name: Build APK
       run: |
-        /bin/cp -f shop_ui_nobutton_v2.py main.py
+        cp shop_ui_nobutton_v2.py main.py
         buildozer android debug
-      env:
-        ANDROID_SDK_ROOT: ~/.buildozer/android/platform/android-sdk
-        PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
     
     - name: Upload APK
       uses: actions/upload-artifact@v4
