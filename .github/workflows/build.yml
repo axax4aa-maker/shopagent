@@ -28,13 +28,17 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython
     
+    - name: Setup Android SDK licenses
+      run: |
+        mkdir -p ~/.android
+        touch ~/.android/repositories.cfg
+        echo "count=0" > ~/.android/repositories.cfg
+    
     - name: Build APK
       run: |
         cp shop_ui_nobutton_v2.py main.py
         buildozer android debug
-    
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: shopagent-apk
-        path: bin/*.apk
+      env:
+        # 自动接受许可证
+        ANDROID_SDK_HOME: /home/runner/.android
+        JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
