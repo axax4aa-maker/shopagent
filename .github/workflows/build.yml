@@ -50,7 +50,11 @@ jobs:
     
     - name: Build APK
       run: |
-        cp shop_ui_nobutton_v2.py main.py
+        # 直接使用 shop_ui_nobutton_v2.py 作为 main.py
+        # 方式1：复制文件
+        /bin/cp shop_ui_nobutton_v2.py main.py
+        # 或者方式2：直接重命名
+        # mv shop_ui_nobutton_v2.py main.py
         buildozer android debug
       env:
         ANDROID_SDK_ROOT: ~/.buildozer/android/platform/android-sdk
