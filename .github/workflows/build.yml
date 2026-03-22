@@ -20,15 +20,33 @@ jobs:
     
     - name: Install Buildozer
       run: |
-        pip install buildozer
-        pip install cython
+        pip install buildozer cython
         sudo apt update
         sudo apt install -y openjdk-17-jdk
+    
+    - name: Setup Android SDK
+      run: |
+        # 安装 SDK 命令行工具
+        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+        unzip commandlinetools-linux-9477386_latest.zip
+        mkdir -p ~/.android
+        echo "count=0" > ~/.android/repositories.cfg
+        mv cmdline-tools ~/cmdline-tools
+        export ANDROID_HOME=$HOME/android-sdk
+        mkdir -p $ANDROID_HOME/cmdline-tools
+        mv ~/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
+        
+        # 接受所有许可证（包括预览版）
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses --include_preview || true
     
     - name: Build APK
       run: |
         cp shop_ui_nobutton_v2.py main.py
         buildozer android debug
+      env:
+        ANDROID_HOME: $HOME/android-sdk
+        PATH: $PATH:$ANDROID_HOME/cmdline-tools/latest/bin
     
     - name: Upload APK
       uses: actions/upload-artifact@v4
