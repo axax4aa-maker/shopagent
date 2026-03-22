@@ -33,18 +33,20 @@ jobs:
         # 下载命令行工具
         wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
         unzip commandlinetools-linux-9477386_latest.zip
-        mkdir -p ~/.buildozer/android/platform/android-sdk
-        mv cmdline-tools ~/.buildozer/android/platform/android-sdk/
+        
+        # 创建正确的目录结构
+        mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools
+        mv cmdline-tools ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest
         
         # 设置环境变量
         export ANDROID_SDK_ROOT=~/.buildozer/android/platform/android-sdk
-        export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/bin
+        export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
         
         # 接受所有许可证（自动）
-        yes | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --licenses
+        yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
         
         # 安装稳定版 build-tools
-        $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
     
     - name: Build APK
       run: |
@@ -52,7 +54,7 @@ jobs:
         buildozer android debug
       env:
         ANDROID_SDK_ROOT: ~/.buildozer/android/platform/android-sdk
-        PATH: ${{ env.PATH }}:$ANDROID_SDK_ROOT/cmdline-tools/bin
+        PATH: ${{ env.PATH }}:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
     
     - name: Upload APK
       uses: actions/upload-artifact@v4
